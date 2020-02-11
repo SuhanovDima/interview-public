@@ -1,5 +1,7 @@
 package com.devexperts.account;
 
+import com.devexperts.exception.DevExpertsNotEnoughMoneyException;
+
 public class Account {
     private final AccountKey accountKey;
     private final String firstName;
@@ -29,7 +31,18 @@ public class Account {
         return balance;
     }
 
-    public void setBalance(Double balance) {
-        this.balance = balance;
+    public void increaseBalance(Double delta) {
+        balance += delta;
+    }
+
+    public void reduceBalance(Double delta) {
+        checkBalance(delta);
+        balance -= delta;
+    }
+
+    public void checkBalance(Double amount) {
+        if (balance < amount) {
+            throw new DevExpertsNotEnoughMoneyException("Balance of source is not enough full");
+        }
     }
 }
